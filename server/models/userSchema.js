@@ -1,0 +1,36 @@
+const mongoose = require('mongoose')
+
+
+const userSchema = new mongoose.Schema({
+    user: {
+        type: String,
+        required: [true, 'Name is required'],
+        minLength: [3, 'At least use 3 characters'],
+        maxLength: [15, 'At most use 15 characters'],
+        trim: true,
+    },
+    email: {
+        type: String,
+        required: [true, 'Email is required'],
+        match: [/\S+@\S+\.\S+/, 'Invalid email'],
+        trim: true,
+        index:true
+    },
+    password:{
+        type: String,
+        required: true,
+        
+    }
+})
+userSchema.pre('save', async (next)=>{
+    if(!this.isModified('password')) return next();
+
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt)
+    next();
+})
+
+userSchema.methods.comparePassword = function(enteredPassword){
+    return bcrypt.compare(enteredPassword, this.password)
+}
+const user = mongoose.model('User', userSchema)

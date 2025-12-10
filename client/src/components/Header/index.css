@@ -1,0 +1,12 @@
+.nav{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.nav-title{
+    display:flex;
+    justify-content: space-between;
+}
+.nav-title li{
+    margin-right: 20px;
+}
