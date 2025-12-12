@@ -1,5 +1,6 @@
 const router = require('express').Router();
 
-router.get('/user', require('./userRouter'))
-router.get('/todo', require('./todoRouter'))
+router.use('/user', require('./userRouter'));
+router.use('/todo', require('./todoRouter'));
 
+module.exports = router;

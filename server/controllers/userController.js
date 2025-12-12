@@ -5,14 +5,14 @@ exports.signup = async (req, res)=>{
 
     try{
 
-   
+   console.log("sign up called...")
     const {name, password, email} = req.body
-    const newUser = await User.findOne({email})
+    let newUser = await User.findOne({email})
 
     if (newUser) res.status(404).send('Email already exists!')
 
         newUser = await User.create({name, password, email})
-        res.sendToken(newUser, res)
+        sendToken(newUser, res)
 
         res.status(201).json({
             message: 'Account created',
@@ -42,7 +42,7 @@ try{
         sendToken(user, res)
         res.status(200).json({
             message: 'Logged In',
-            user: {id: user._id, email: user.password, name: user.name}})
+            user: {id: user._id, email: user.email, name: user.name}})
 
             }catch(err){
                 res.status(404).json({message: err.message})
@@ -51,5 +51,10 @@ try{
 }
 
 exports.logout = async (req, res)=>{
-
+            res.clearToken('token', {
+                httpOnly: true,
+                secure: process.env.COOKIE_SECURE==='true',
+                sameSite: 'lax'
+            })
+        res.status(200).json({message: 'successfully Logged Out'})
 }
