@@ -13,7 +13,7 @@ module.exports = function sendToken(user, res){
         secure: process.env.COOKIE_SECURE === 'true',
         sameSite: 'lax',
         maxAge:  7 * 24 * 60 * 60 * 1000
-    })
+    }).status(200).json({message: 'Account was created'})
  
     return token;
 }

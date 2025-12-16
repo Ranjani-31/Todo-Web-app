@@ -14,24 +14,27 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Email is required'],
         match: [/\S+@\S+\.\S+/, 'Invalid email'],
         trim: true,
-        index:true
+        index:true,
+        unique: true,
+        lowercase: true
     },
     password:{
         type: String,
         required: true,
+        select: false
         
     }
 })
 userSchema.pre('save', async function(next){
     if(!this.isModified('password')) return next();
 
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(12);
     this.password = await bcrypt.hash(this.password, salt)
    
 })
 
-userSchema.methods.comparePassword = function(enteredPassword){
-    return bcrypt.compare(enteredPassword, this.password)
+userSchema.methods.comparePassword = async function(enteredPassword){
+    return await bcrypt.compare(enteredPassword, this.password)
 }
 const user = mongoose.model('User', userSchema)
 module.exports = user

@@ -70,9 +70,9 @@ exports.getTodo = async (req, res)=>{
     try{
 
         const date = new Date(req.query.date)
-
-        const todos = await Todo.find({userId: req.userId, createdAt: date})
-        res.status(200),json(
+      console.log(date)
+        const todos = await Todo.find({userId: req.userId, dueDate: date})
+        res.status(200).json( 
             {
                 todos: todos.map(item=>({
                     id: item.id,
