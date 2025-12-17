@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 
 module.exports = function sendToken(user, res){
 
@@ -10,8 +10,9 @@ module.exports = function sendToken(user, res){
 
     res.cookie('token', token, {
         httpOnly: true,
-        secure: process.env.COOKIE_SECURE === 'true',
-        sameSite: 'lax',
+        secure: false,
+        sameSite: "Lax",
+        path: '/',
         maxAge:  7 * 24 * 60 * 60 * 1000
     }).status(200).json({message: 'Account was created'})
  

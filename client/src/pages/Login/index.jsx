@@ -21,7 +21,7 @@ function Login() {
   }
   const onLogin=async (e)=>{
     e.preventDefault()
-    const data = await fetch(`${url}/login`,{
+    const data = await fetch(`${url}/user/login`,{
       method: 'POST',
       header:{
         "Content-Type": "application/json"

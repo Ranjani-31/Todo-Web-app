@@ -30,6 +30,7 @@ function Signup() {
       headers:{
         "Content-Type": "application/json"
       },
+        credentials: "include",
       body: JSON.stringify({
       name:userCredentials.name,
         email: userCredentials.email,
@@ -37,8 +38,7 @@ function Signup() {
       })
     })
 
-    const response =await data.json()
-    console.log(data)
+    const response = await data.json()
     if (!data.ok){
       setError(response.message)
     }else{

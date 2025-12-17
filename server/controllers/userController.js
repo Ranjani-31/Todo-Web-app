@@ -6,10 +6,10 @@ exports.signup = async (req, res) => {
     console.log("sign up called...");
     const { name, password, email } = req.body;
     let newUser = await User.findOne({ email });
-    if  (newUser) return res.status(404).send("Email already exists!");
+    if  (newUser) return res.status(409).send("Email already exists!");
 
 
-    if (name.length <= 3)
+    if (name.length < 3)
      return  res.status(400).json({ message: "Name is too short" });
 
     const email_regex = /^[a-zA-z\d]+@gmail\.com$/
@@ -33,7 +33,7 @@ exports.signup = async (req, res) => {
      if (!/(?=.*\d)/.test(password))
       return res.status(400).json({ message: "Add at least one digit" });
      if (!/(?=.*[^A-Za-z0-9])/.test(password)) return res.status(400).json({message: 'use at least one special character'})
-     if (!(password.length >=8 || password.length<=15)) return res.status(400).json({message: 'password must be between 8-15 charaters'})
+     if (!(password.length <8 || password.length>5)) return res.status(400).json({message: 'password must be between 8-15 charaters'})
    
 
 

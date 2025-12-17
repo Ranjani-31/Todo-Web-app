@@ -2,8 +2,9 @@ const Todo = require("../models/todoSchema");
 
 exports.createTodo =async (req, res) => {
   try {
-    const { title, description, status, priority, dueDate, userId } = req.body;
-
+    const userId=req.userId
+    const { title, description, status, priority, dueDate } = req.body;
+console.log(title, description, status, priority, dueDate)
     const todo = await Todo.create({
       title,
       description,
@@ -26,7 +27,7 @@ exports.createTodo =async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
