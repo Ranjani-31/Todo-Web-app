@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema({
         select: false
         
     }
+
 })
 userSchema.pre('save', async function(next){
     if(!this.isModified('password')) return next();
@@ -38,3 +39,4 @@ userSchema.methods.comparePassword = async function(enteredPassword){
 }
 const user = mongoose.model('User', userSchema)
 module.exports = user
+

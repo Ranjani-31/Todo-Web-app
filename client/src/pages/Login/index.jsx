@@ -1,5 +1,5 @@
 import {useState, } from 'react'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, Link} from 'react-router-dom'
 
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -53,6 +53,7 @@ function Login() {
           Login
         </Button>
 
+<p>Don't have an account <Link to='/signup'>Signup</Link></p>
       </form>
     </div>
   );

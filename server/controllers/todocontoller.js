@@ -4,7 +4,6 @@ exports.createTodo =async (req, res) => {
   try {
     const userId=req.userId
     const { title, description, status, priority, dueDate } = req.body;
-console.log(title, description, status, priority, dueDate)
     const todo = await Todo.create({
       title,
       description,
@@ -13,7 +12,6 @@ console.log(title, description, status, priority, dueDate)
       dueDate,
       userId,
     });
-    console.log(todo)
     res.status(201).json({
       message: "Todo Created",
       todo: {
@@ -36,9 +34,12 @@ exports.updateTodo = async (req, res) => {
     try{
 
         const {id}= req.params
-  const { title, description, status, priority, dueDate, userId} = req.body;
-  console.log(userId)
-  console.log(req.userId , 'userId')
+        const userId = req.userId
+  const { title, description, status, priority, dueDate} = req.body;
+      const todoChecker= await Todo.findById(id)
+      if (todoChecker.status=='overdue'){
+        return res.status(400).json({message: 'Can not modify'})
+      }
 
   const todo =await Todo.findOneAndUpdate(
     { _id: id, userId},
@@ -70,9 +71,14 @@ exports.getTodo = async (req, res)=>{
 
     try{
 
-        const date = new Date(req.query.date)
-      console.log(date)
-        const todos = await Todo.find({userId: req.userId, dueDate: date})
+      let date = new Date(req.body.date) 
+      
+      const startDate=new Date(date)
+      const endDate=new Date(date)
+     
+
+      
+        const todos = await Todo.find({userId: req.userId, date: {$gle: startDate, $lte: endDate}})
         res.status(200).json( 
             {
                 todos: todos.map(item=>({
@@ -91,3 +97,21 @@ exports.getTodo = async (req, res)=>{
     }
 }
 
+exports.deleteTodo= async (req, res)=>{
+
+  try{
+    const {id }= req.params
+    console.log(id)
+
+    const userId = req.userId 
+    const todo = await Todo.findOneAndDelete({_id: id, userId})
+
+    if (!todo){
+      return res.status(400).json({message: "Not found"})
+    }
+    console.log("deleted")
+    return res.status(200).json({message: "successfully deleted"})
+  }catch(err){
+    res.status(500).json({message: err.message})
+  }
+}  

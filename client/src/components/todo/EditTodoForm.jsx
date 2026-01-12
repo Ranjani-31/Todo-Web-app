@@ -9,16 +9,28 @@ import Button from "@mui/material/Button";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import dayjs from 'dayjs'
 
-function TodoForm({updateTodoList}) {
-  const [isProgress, setIsprogress] = useState(false);
+function EditTodoForm(props) {
+   const {id, title, description, status, priority, dueDate} = props.todo
+
+
   const [todo, setTodo] = useState({
-    title: "",
-    description: "",
-    status: "pending",
-    priority: "medium",
-    dueDate: null,
+    title,
+    description,
+    status,
+    priority,
+    dueDate: dayjs(dueDate),
   });
+  useEffect(()=>{
+    setTodo({
+         title,
+    description,
+    status,
+    priority,
+    dueDate: dayjs(dueDate),
+    })
+  }, [props.todo])
 const url = import.meta.env.VITE_API_URL
   const statusUpdate = (e) => {
     setTodo((c) => ({ ...c, status: e.target.value }));
@@ -37,46 +49,42 @@ const url = import.meta.env.VITE_API_URL
     setTodo((c) => ({ ...c, dueDate:newTime}));
     
   }
-  const updateProgress = () => {
-    setIsprogress((c) => !c);
-  };
-
+ 
   const todoSubmition =async (e)=>{
     e.preventDefault()
 
-    const newTodo = {
+    const updatedTodo = {
       ...todo,
       dueDate: new Date(todo.dueDate)
     }
 
-    const response = await fetch(`${url}/todo/add`, {
-      method: 'POST',
-      headers: {
-        "Content-Type" : "application/json"
-      }, 
-      credentials: 'include',
-      body: JSON.stringify(newTodo)
-    }) 
-const responseTodo = await response.json()
-updateTodoList(responseTodo.todo)
-console.log(responseTodo.todo)
-setTodo({title: "",
-    description: "",
-    status: "pending",
-    priority: "medium",
-    dueDate: null,})
+    try{
+const response = await fetch(`${url}/todo/update/${id}`, {
+    method: "PUT", 
+    headers: {
+        "Content-Type": "application/json" 
+    },
+    credentials: "include",
+    body: JSON.stringify(updatedTodo)
+})
+
+    const updatatedTodoItem = await response.json()
+    if (response.ok){
+    props.updateTodoItem(updatatedTodoItem.todo)
+    }else{
+        console.error(updatatedTodoItem.message)
+    }
+    }catch(err){
+        console.error(err.message)
+    }
+    
+
 
   }
   return (
     <div className="w-100">
-      <button onClick={updateProgress}>
-        {!isProgress ? (
-          <span className="material-symbols-outlined">add</span>
-        ) : (
-          <span className="material-symbols-outlined">close</span>
-        )}
-      </button>
-      {isProgress && (
+    
+     
         <form onSubmit={todoSubmition} className="d-flex flex-column justify-content-center align-items-center ">
           <TextField
             onChange={updateTodo}
@@ -140,9 +148,9 @@ setTodo({title: "",
             <Button variant="contained" type="submit" className="mt-4 w-50">Submit</Button>
            
         </form>
-      )}
+      
     </div>
   );
 }
 
-export default TodoForm;
+export default EditTodoForm;

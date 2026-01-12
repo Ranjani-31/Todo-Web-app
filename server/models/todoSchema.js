@@ -24,7 +24,8 @@ const todoSchema = new mongoose.Schema({
         default: 'medium'
     },
     dueDate: {
-        type: Date
+        type: Date,
+        required: true
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,

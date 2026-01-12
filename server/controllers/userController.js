@@ -3,10 +3,10 @@ const sendToken = require("../utils/sendToken");
 
 exports.signup = async (req, res) => {
   try {
-    console.log("sign up called...");
+    
     const { name, password, email } = req.body;
     let newUser = await User.findOne({ email });
-    if  (newUser) return res.status(409).send("Email already exists!");
+    if  (newUser) return res.status(409).json({message: "Email already exists!"});
 
 
     if (name.length < 3)
@@ -36,7 +36,7 @@ exports.signup = async (req, res) => {
      if (!(password.length <8 || password.length>5)) return res.status(400).json({message: 'password must be between 8-15 charaters'})
    
 
-
+ 
 
 
     newUser = await User.create({ name, password, email });
@@ -48,7 +48,7 @@ exports.signup = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
+ 
 
 exports.login = async (req, res) => {
   try {
@@ -81,3 +81,21 @@ exports.logout = async (req, res) => {
   });
   res.status(200).json({ message: "successfully Logged Out" });
 };
+
+exports.getUser = async(req, res)=>{
+  const userId = req.userId
+  try{
+  const user =await User.findById(userId)
+    if(!user) return res.status(400)
+      console.log(user)
+      res.status(200).json({message:"user data fetched", user:{
+        name: user.name,
+        email: user.email
+
+      }})
+  }catch(err){
+    res.status(500).json({message: err.message}) 
+  }
+
+
+}
