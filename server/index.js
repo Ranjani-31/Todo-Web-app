@@ -9,13 +9,18 @@ app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
+    methods: ["GET", "PUT", "POST", "DELETE","OPTIONS"],
+    allowedHeaders: ["Content-Type"]
   })
 );
-app.use(express.json())
+
+app.use(express.json()) 
 app.use(cookieParser())
 mongodb()
-
+ 
 app.use('/', require('./routes'))
  app.listen(5000, ()=>{ 
     console.log('server started')
  })   
+
+ module.exports = app

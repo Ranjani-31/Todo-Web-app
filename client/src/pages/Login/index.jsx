@@ -23,17 +23,22 @@ function Login() {
     e.preventDefault()
     const data = await fetch(`${url}/user/login`,{
       method: 'POST',
-      header:{
+      headers:{
         "Content-Type": "application/json"
       },
+       credentials: "include", 
       body: JSON.stringify({
         email: userCredentials.email,
         password: userCredentials.password
       })
     })
 
-    const response = JSON.parse(data)
-    if (!response.ok){
+    const response =await (data).json()
+    
+    console.log(data)
+    
+    console.log("email", response.user.email)
+    if (!data.ok){
       setError(response.message)
     }else{
       setError('')

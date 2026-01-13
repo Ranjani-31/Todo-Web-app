@@ -24,7 +24,7 @@ useEffect( ()=>{
         credentials: "include"
     })
     const response = await data.json()
-console.log(response.todos)
+console.log(response)
 
     if (!data.ok){
         
