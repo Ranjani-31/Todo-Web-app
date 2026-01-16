@@ -9,8 +9,10 @@ app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
-    methods: ["GET", "PUT", "POST", "DELETE","OPTIONS"],
-    allowedHeaders: ["Content-Type"]
+    methods: ["GET", "PUT", "POST", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    optionsSuccessStatus: 200
+   
   })
 );
 

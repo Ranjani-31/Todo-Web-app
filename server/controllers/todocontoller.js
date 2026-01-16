@@ -1,9 +1,10 @@
 const Todo = require("../models/todoSchema");
 
 exports.createTodo =async (req, res) => {
+  console.log("...")
   try {
     const userId=req.userId
-    const { title, description, status, priority, dueDate } = req.body;
+    const { title, description, status, priority, dueDate, createdAt } = req.body;
     const todo = await Todo.create({
       title,
       description,
@@ -11,6 +12,7 @@ exports.createTodo =async (req, res) => {
       priority,
       dueDate,
       userId,
+      createdAt, 
     });
     res.status(201).json({
       message: "Todo Created",
@@ -71,14 +73,13 @@ exports.getTodo = async (req, res)=>{
 
     try{
 
-      let date = new Date(req.body.date) 
+      let {startDate, endDate} = req.body
       
-      const startDate=new Date(date)
-      const endDate=new Date(date)
-     
-
+       startDate=new Date(startDate)
+      endDate=new Date(endDate)
+ 
       
-        const todos = await Todo.find({userId: req.userId, date: {$gle: startDate, $lte: endDate}})
+        const todos = await Todo.find({userId: req.userId, createdAt: {$gte: startDate, $lte: endDate}})
         res.status(200).json( 
             {
                 todos: todos.map(item=>({

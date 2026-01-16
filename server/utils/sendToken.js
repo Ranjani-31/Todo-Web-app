@@ -4,7 +4,7 @@ module.exports =async function sendToken(user, res) {
   const token =  jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
-console.log("...")
+
  return  res
     .status(200)
     .cookie("token", token, {

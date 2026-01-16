@@ -5,7 +5,7 @@ const todo = require('../../controllers/todocontoller')
 
 router.post('/add',auth,updateOverDueTodos, todo.createTodo);
 router.put('/update/:id',auth,updateOverDueTodos, todo.updateTodo)
-router.get('/get',auth,updateOverDueTodos, todo.getTodo)
+router.post('/get',auth,updateOverDueTodos, todo.getTodo)
 router.post("/delete/:id", auth,updateOverDueTodos, todo.deleteTodo)
 
-module.exports = router
+module.exports = router 

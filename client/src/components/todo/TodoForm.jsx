@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import dayjs from 'dayjs'
 import TextField from "@mui/material/TextField";
 import { Select, MenuItem } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
@@ -10,6 +10,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
+import "./todoCss.css"
 function TodoForm({updateTodoList}) {
   const [isProgress, setIsprogress] = useState(false);
   const [todo, setTodo] = useState({
@@ -46,7 +47,8 @@ const url = import.meta.env.VITE_API_URL
 
     const newTodo = {
       ...todo,
-      dueDate: new Date(todo.dueDate)
+      dueDate: (todo.dueDate).utc().toISOString(),
+      createdAt: (dayjs).utc().toISOString()
     }
 
     const response = await fetch(`${url}/todo/add`, {
@@ -59,7 +61,7 @@ const url = import.meta.env.VITE_API_URL
     }) 
 const responseTodo = await response.json()
 updateTodoList(responseTodo.todo)
-console.log(responseTodo.todo)
+console.log("response todo",responseTodo.todo)
 setTodo({title: "",
     description: "",
     status: "pending",
@@ -68,16 +70,16 @@ setTodo({title: "",
 
   }
   return (
-    <div className="w-100">
-      <button onClick={updateProgress}>
+    <div className="w-100 ">
+      <button className="todo-button mx-5" onClick={updateProgress}>
         {!isProgress ? (
-          <span className="material-symbols-outlined">add</span>
+          <span className="material-symbols-outlined ">add</span>
         ) : (
-          <span className="material-symbols-outlined">close</span>
+          <span className="material-symbols-outlined ">close</span>
         )}
       </button>
       {isProgress && (
-        <form onSubmit={todoSubmition} className="d-flex flex-column justify-content-center align-items-center ">
+        <form onSubmit={todoSubmition} className="position-relative d-flex flex-column justify-content-center align-items-center ">
           <TextField
             onChange={updateTodo}
             hiddenLabel
@@ -137,7 +139,7 @@ setTodo({title: "",
             <LocalizationProvider dateAdapter={AdapterDayjs} >
               <TimePicker label="Due time"  onChange={updateTime} className="w-50 mt-4" value={todo.dueDate}/>
             </LocalizationProvider>
-            <Button variant="contained" type="submit" className="mt-4 w-50">Submit</Button>
+            <Button variant="contained" type="submit" className="mt-4 w-50">Add task</Button>
            
         </form>
       )}

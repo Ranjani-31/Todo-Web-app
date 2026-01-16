@@ -18,7 +18,8 @@ async function  updateOverDueTodos  (req, res, next){
     })
     next()
 }catch(err){
-    next(err)
+    console.log(err.message)
+    res.status(404).json({message: err.message})
 }
 }
 module.exports = updateOverDueTodos
